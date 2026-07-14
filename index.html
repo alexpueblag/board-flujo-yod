@@ -357,7 +357,7 @@ function credencial(){ try{return localStorage.getItem(PORTERO_LSK)||""}catch(e)
 function credencialRechazada(){ try{localStorage.removeItem(PORTERO_LSK);sessionStorage.removeItem("pyod_rol")}catch(e){}; location.reload(); }
 async function api(action, payload={}){
   if(DEMO) return {ok:true, demo:true};
-  const res = await fetch(APPS_SCRIPT_URL,{method:"POST",body:JSON.stringify({k:credencial(),action,...payload}),headers:{"Content-Type":"text/plain;charset=utf-8"},redirect:"follow"});
+  const res = await fetch(APPS_SCRIPT_URL,{method:"POST",credentials:"omit",body:JSON.stringify({k:credencial(),action,...payload}),headers:{"Content-Type":"text/plain;charset=utf-8"},redirect:"follow"});
   const data = await res.json();
   if(!data.ok){ if(data.error==="liga") credencialRechazada(); throw new Error(data.error||"Error"); }
   return data;
