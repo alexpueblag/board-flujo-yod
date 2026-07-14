@@ -6,6 +6,7 @@
 <meta name="robots" content="noindex,nofollow,noarchive">
 <title>YOD · Flujo 2026</title>
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Instrument+Sans:wght@400;500;600;700&family=Manrope:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.24.0/dist/tabler-icons.min.css">
 <style>
 :root{--accent:#B98B3C;--ink:#F1EDE3;--bg:#17140F;--card:#221E17;--line:rgba(255,255,255,.09);--green:#8FBF8B;--red:#E0605A;--radius:7px;--shadow:0 1px 2px rgba(0,0,0,.35),0 1px 3px rgba(0,0,0,.45)}
 *{box-sizing:border-box;margin:0}
@@ -15,13 +16,15 @@ h1.title{font-family:'Instrument Serif',serif;font-size:1.6rem}
 .gate{position:fixed;inset:0;background:linear-gradient(180deg,#121215,#0a0a0c);display:grid;place-items:center;z-index:1000;padding:1rem}
 .gate-box{background:#16161a;border:1px solid var(--line);border-top:4px solid var(--accent);padding:2.5rem;max-width:420px;width:100%;text-align:center;border-radius:var(--radius);box-shadow:0 25px 60px rgba(0,0,0,.55)}
 .gate input{width:100%;padding:.85rem 1rem;text-align:center;letter-spacing:.15em;border:1px solid var(--line);border-radius:5px;font-size:1rem;margin:1.2rem 0 .7rem;background:#101014;color:var(--ink)}
-.btn{padding:.7rem 1.2rem;background:var(--ink);color:#0a0a0c;border:0;border-radius:5px;font-weight:600;cursor:pointer;letter-spacing:.03em;font-size:.85rem}
+.btn{display:inline-flex;align-items:center;gap:.4rem;padding:.7rem 1.2rem;background:var(--ink);color:#0a0a0c;border:0;border-radius:9px;font-weight:600;cursor:pointer;letter-spacing:.03em;font-size:.85rem}.btn i{font-size:1.05em}
 .btn:hover{background:#fff}.btn.full{width:100%}
 .btn.ghost{background:rgba(255,255,255,.07);color:#b6b3aa}
 header{background:#121215;border-bottom:1px solid var(--line);padding:.9rem 1.6rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:.7rem;position:sticky;top:0;z-index:50}
-.tabs{display:flex;gap:.3rem;background:var(--bg);padding:.25rem;border-radius:6px;flex-wrap:wrap}
-.tab{padding:.5rem .95rem;border:0;background:transparent;border-radius:5px;cursor:pointer;font-weight:600;font-size:.8rem;color:#8a8780}
-.tab.on{background:rgba(255,255,255,.08);color:var(--ink);box-shadow:var(--shadow)}
+.tabs{display:flex;gap:.3rem;background:var(--bg);padding:.3rem;border-radius:11px;flex-wrap:wrap}
+.tab{display:inline-flex;align-items:center;gap:.45rem;padding:.5rem .95rem;border:0;background:transparent;border-radius:9px;cursor:pointer;font-weight:600;font-size:.8rem;color:#8a8780}
+.tab i{font-size:1.05rem}
+.tab:hover{background:rgba(255,255,255,.05);color:var(--ink)}
+.tab.on{background:rgba(185,139,60,.22);color:var(--ink)}
 main{max-width:1280px;margin:0 auto;padding:1.4rem 1.6rem}
 .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:.9rem;margin-bottom:1.3rem}
 .card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:1rem 1.2rem;box-shadow:var(--shadow)}
@@ -40,7 +43,7 @@ tr:hover td{background:rgba(255,255,255,.03)}
 .pill.fijo{background:rgba(201,169,110,.14);color:#c9a96e}.pill.recurrente{background:rgba(140,193,222,.14);color:#8CC1DE}.pill.unico,.pill.único{background:rgba(255,255,255,.08);color:#b6b3aa}
 .bar{height:8px;border-radius:99px;background:rgba(255,255,255,.09);overflow:hidden;margin-top:.45rem}.bar i{display:block;height:100%;background:var(--accent)}
 .bar i.warn{background:#D9A45B}.bar i.bad{background:var(--red)}
-.add-btn{background:var(--accent);color:#0a0a0c;border:0;padding:.5rem 1rem;border-radius:5px;font-weight:700;cursor:pointer;font-size:.78rem}
+.add-btn{display:inline-flex;align-items:center;gap:.35rem;background:var(--accent);color:#0a0a0c;border:0;padding:.5rem 1rem;border-radius:9px;font-weight:700;cursor:pointer;font-size:.78rem}.add-btn i{font-size:1.05em}
 .add-btn:hover{filter:brightness(1.08)}
 /* BOLSAS */
 .bolsas{display:grid;grid-template-columns:repeat(5,1fr);gap:.9rem}
@@ -69,7 +72,7 @@ tr:hover td{background:rgba(255,255,255,.03)}
 .dot.v{background:#8FBF8B;box-shadow:0 0 8px #8FBF8B88}.dot.a{background:#D9A45B;box-shadow:0 0 8px #D9A45B88}.dot.r{background:#E0605A;box-shadow:0 0 8px #E0605A88}
 .chartwrap{width:100%;overflow:hidden}
 .chartTab{font-size:.78rem;padding:.3rem .7rem}
-.chartTab.on{background:#c9a96e;color:#0a0a0c;border-color:#c9a96e}
+.chartTab{display:inline-flex;align-items:center;gap:.35rem}.chartTab i{font-size:1em}.chartTab.on{background:rgba(185,139,60,.22)!important;color:var(--ink)!important;border-color:transparent!important}
 .concil{font-size:.78rem;padding:.55rem .8rem;border-radius:5px;margin-bottom:.6rem}
 .concil.ok{background:rgba(143,191,139,.10);border:1px solid rgba(143,191,139,.35);color:#8FBF8B}
 .concil.warn{background:rgba(224,96,90,.10);border:1px solid rgba(224,96,90,.35);color:#E0605A}
@@ -79,7 +82,8 @@ tr:hover td{background:rgba(255,255,255,.03)}
 .modal.open{display:grid}
 .modal-box{background:#16161a;border:1px solid var(--line);border-radius:var(--radius);max-width:560px;width:100%;padding:1.5rem;box-shadow:0 25px 60px rgba(0,0,0,.6);max-height:90vh;overflow:auto}
 .modal-box label{display:block;font-size:.68rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#8a8780;margin:.65rem 0 .22rem}
-.modal-box input,.modal-box select,.modal-box textarea,.filters input,.filters select{padding:.5rem .65rem;border:1px solid var(--line);border-radius:5px;font-family:inherit;font-size:.83rem;width:100%;background:#101014;color:var(--ink)}
+.modal-box input,.modal-box select,.modal-box textarea,.filters input,.filters select{padding:.55rem .7rem;border:1px solid var(--line);border-radius:9px;font-family:inherit;font-size:.83rem;width:100%;background:#101014;color:var(--ink)}
+.modal-box input:focus,.modal-box select:focus,.modal-box textarea:focus,.filters input:focus,.filters select:focus{outline:2px solid rgba(185,139,60,.5);border-color:var(--accent)}
 .note{font-size:.72rem;color:#8a8780;margin-top:.4rem}
 .alerta{border-left:3px solid var(--red);padding:.5rem .8rem;background:rgba(224,96,90,.08);border-radius:0 5px 5px 0;margin-bottom:.45rem;font-size:.8rem}
 .alerta.ok{border-left-color:var(--green);background:rgba(143,191,139,.08)}
@@ -119,8 +123,8 @@ tr:hover td{background:rgba(255,255,255,.03)}
 .ai-sug button:hover{background:rgba(201,169,110,.22)}
 .ai-think{color:#8a8780;font-style:italic;font-size:.8rem}
 .ai-modo{display:flex;gap:.3rem;margin-bottom:.7rem}
-.ai-modo button{flex:1;font-size:.7rem;padding:.4rem;border:1px solid var(--line);background:#16161a;border-radius:5px;cursor:pointer;font-weight:600;color:#8a8780}
-.ai-modo button.on{background:#c9a96e;color:#0a0a0c;border-color:#c9a96e}
+.ai-modo button{display:inline-flex;align-items:center;justify-content:center;gap:.35rem;flex:1;font-size:.7rem;padding:.45rem;border:1px solid var(--line);background:#16161a;border-radius:9px;cursor:pointer;font-weight:600;color:#8a8780}
+.ai-modo button.on{background:rgba(185,139,60,.22);color:var(--ink);border-color:transparent}
 </style>
 </head>
 <body>
@@ -136,10 +140,10 @@ tr:hover td{background:rgba(255,255,255,.03)}
     <h1 class="title">Flujo 2026</h1>
   </div>
   <nav class="tabs">
-    <button class="tab on" data-v="dash" onclick="go('dash',this)">Bolsas</button>
-    <button class="tab" data-v="movs" onclick="go('movs',this)">Movimientos</button>
-    <button class="tab" data-v="plan" onclick="go('plan',this)">Planificación</button>
-    <button class="tab" data-v="hist" onclick="go('hist',this)">Historial</button>
+    <button class="tab on" data-v="dash" onclick="go('dash',this)"><i class="ti ti-wallet"></i>Bolsas</button>
+    <button class="tab" data-v="movs" onclick="go('movs',this)"><i class="ti ti-arrows-exchange"></i>Movimientos</button>
+    <button class="tab" data-v="plan" onclick="go('plan',this)"><i class="ti ti-calendar-stats"></i>Planificación</button>
+    <button class="tab" data-v="hist" onclick="go('hist',this)"><i class="ti ti-history"></i>Historial</button>
   </nav>
   <div style="display:flex;gap:.5rem;align-items:center">
     <span class="muted" id="syncInfo"></span>
@@ -164,10 +168,10 @@ tr:hover td{background:rgba(255,255,255,.03)}
     <div class="section">
       <h3>Visualización del flujo <span class="muted">cambia el tipo de gráfica para entenderlo de distintas formas</span></h3>
       <div id="chartTabs" style="display:flex;gap:.4rem;flex-wrap:wrap;margin-bottom:.6rem">
-        <button class="btn ghost chartTab on" onclick="setChart('saldo',this)">Saldo en el tiempo</button>
-        <button class="btn ghost chartTab" onclick="setChart('ievsmes',this)">Ingresos vs Egresos</button>
-        <button class="btn ghost chartTab" onclick="setChart('flujobolsa',this)">Flujo por bolsa</button>
-        <button class="btn ghost chartTab" onclick="setChart('dona',this)">Distribución egresos</button>
+        <button class="btn ghost chartTab on" onclick="setChart('saldo',this)"><i class="ti ti-chart-line"></i>Saldo en el tiempo</button>
+        <button class="btn ghost chartTab" onclick="setChart('ievsmes',this)"><i class="ti ti-arrows-diff"></i>Ingresos vs Egresos</button>
+        <button class="btn ghost chartTab" onclick="setChart('flujobolsa',this)"><i class="ti ti-chart-bar"></i>Flujo por bolsa</button>
+        <button class="btn ghost chartTab" onclick="setChart('dona',this)"><i class="ti ti-chart-donut"></i>Distribución egresos</button>
       </div>
       <div style="position:relative;height:340px"><canvas id="flowChart"></canvas></div>
     </div>
@@ -223,8 +227,8 @@ tr:hover td{background:rgba(255,255,255,.03)}
   <div class="ai-body" id="aiBody"></div>
   <div class="ai-foot">
     <div class="ai-modo">
-      <button id="modoIA" class="on" onclick="setModo('ia')">IA (responde)</button>
-      <button id="modoBuscar" onclick="setModo('buscar')">Búsqueda exacta</button>
+      <button id="modoIA" class="on" onclick="setModo('ia')"><i class="ti ti-sparkles"></i>IA (responde)</button>
+      <button id="modoBuscar" onclick="setModo('buscar')"><i class="ti ti-search"></i>Búsqueda exacta</button>
     </div>
     <div style="display:flex;align-items:center;gap:.4rem;margin-bottom:.5rem">
       <button id="lockBtn" title="Activar modelo avanzado" onclick="toggleLock()" style="background:none;border:0;cursor:pointer;font-size:.8rem">🔒</button>
