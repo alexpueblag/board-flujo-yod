@@ -8,9 +8,9 @@
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Instrument+Sans:wght@400;500;600;700&family=Manrope:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.24.0/dist/tabler-icons.min.css">
 <style>
-:root{--accent:#B98B3C;--ink:#F1EDE3;--bg:#17140F;--card:#221E17;--line:rgba(255,255,255,.09);--green:#8FBF8B;--red:#E0605A;--radius:7px;--shadow:0 1px 2px rgba(0,0,0,.35),0 1px 3px rgba(0,0,0,.45)}
+:root{--accent:#9a7b3f;--ink:#231d14;--bg:#f6f3ed;--card:#ffffff;--line:#e1dacb;--green:#39744b;--red:#a94438;--radius:9px;--shadow:0 1px 2px rgba(35,29,20,.06),0 8px 24px rgba(35,29,20,.06)}
 *{box-sizing:border-box;margin:0}
-body{font-family:'Instrument Sans',Manrope,system-ui,sans-serif;background:linear-gradient(rgba(255,255,255,.012) 1px,transparent 1px) 0 0/60px 60px,linear-gradient(90deg,rgba(255,255,255,.012) 1px,transparent 1px) 0 0/60px 60px,var(--bg);color:var(--ink);font-size:14px;color-scheme:dark}
+body{font-family:'Instrument Sans',Manrope,system-ui,sans-serif;background:linear-gradient(rgba(255,255,255,.012) 1px,transparent 1px) 0 0/60px 60px,linear-gradient(90deg,rgba(255,255,255,.012) 1px,transparent 1px) 0 0/60px 60px,var(--bg);color:var(--ink);font-size:14px;color-scheme:light}
 .eyebrow{font-size:.68rem;letter-spacing:.18em;color:var(--accent);font-weight:700;text-transform:uppercase}
 h1.title{font-family:'Instrument Serif',serif;font-size:1.6rem}
 .gate{position:fixed;inset:0;background:linear-gradient(180deg,#121215,#0a0a0c);display:grid;place-items:center;z-index:1000;padding:1rem}
@@ -125,6 +125,19 @@ tr:hover td{background:rgba(255,255,255,.03)}
 .ai-modo{display:flex;gap:.3rem;margin-bottom:.7rem}
 .ai-modo button{display:inline-flex;align-items:center;justify-content:center;gap:.35rem;flex:1;font-size:.7rem;padding:.45rem;border:1px solid var(--line);background:#16161a;border-radius:9px;cursor:pointer;font-weight:600;color:#8a8780}
 .ai-modo button.on{background:rgba(185,139,60,.22);color:var(--ink);border-color:transparent}
+</style>
+<link rel="stylesheet" href="https://alexpueblag.github.io/yod-portal/os/shell.css">
+<style id="yod-metamorf">
+/* Flujo con la cara YOD OS: header y contenido dentro del lienzo crema */
+.yod-canvas{padding:0 34px}
+header{background:transparent;border-bottom:1px solid var(--line);position:static;padding:20px 0 16px;max-width:1240px;margin:0 auto;box-shadow:none}
+main{max-width:1240px;margin:0 auto;padding:10px 0 64px}
+h1.title{color:var(--ink)}
+.btn{background:#17140F;color:#f6f3ed}
+.btn:hover{filter:brightness(1.6)}
+.modal-box input,.modal-box select,.modal-box textarea,.filters input,.filters select{background:#fff;color:var(--ink)}
+.ai-modo button{background:#fff}
+.filters{background:transparent}
 </style>
 </head>
 <body>
@@ -888,5 +901,6 @@ else{loadAll()}
 </script>
 <!-- Portero YOD: liga mágica / clave de equipo / Google + bitácora -->
 <script src="https://alexpueblag.github.io/potenciales-yod/portero.js"></script>
+<script src="https://alexpueblag.github.io/yod-portal/os/shell.js"></script>
 </body>
 </html>
