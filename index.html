@@ -125,6 +125,14 @@ tr:hover td{background:rgba(255,255,255,.03)}
 .ai-modo{display:flex;gap:.3rem;margin-bottom:.7rem}
 .ai-modo button{display:inline-flex;align-items:center;justify-content:center;gap:.35rem;flex:1;font-size:.7rem;padding:.45rem;border:1px solid var(--line);background:#16161a;border-radius:9px;cursor:pointer;font-weight:600;color:#8a8780}
 .ai-modo button.on{background:rgba(185,139,60,.22);color:var(--ink);border-color:transparent}
+/* ===== Quick wins UX (enjambre 15-jul): táctil, foco, safe-area, tablas móvil ===== */
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,[role=button]:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+header{padding-top:calc(.9rem + env(safe-area-inset-top))}
+@media(max-width:700px){
+  input,select,textarea{font-size:16px}
+  .section table,.mes-block table{display:block;overflow-x:auto;-webkit-overflow-scrolling:touch;white-space:nowrap;max-width:100%}
+  button,.tab,.pill{min-height:40px}
+}
 </style>
 <link rel="stylesheet" href="https://alexpueblag.github.io/yod-portal/os/shell.css">
 <style id="yod-metamorf">
@@ -489,7 +497,6 @@ function fillSelects(){
 }
 
 function renderDash(){
-  const hoyMes="2026-06";
   const ing=DB.movimientos.filter(m=>m.tipo==="Ingreso"&&!esTransfer(m)).reduce((s,m)=>s+ +m.monto,0);
   const egr=DB.movimientos.filter(m=>m.tipo==="Egreso"&&!esTransfer(m)).reduce((s,m)=>s+ +m.monto,0);
   const comp=DB.pagos.filter(p=>p.estado!=="Pagado").reduce((s,p)=>s+ +p.monto,0);
@@ -498,8 +505,8 @@ function renderDash(){
   document.getElementById('kpis').innerHTML=`
     <div class="card"><div class="k">Saldo actual</div><div class="v gold">${fmt(DB.saldo.monto)}</div><div class="note">${DB.saldo.fecha}</div></div>
     <div class="card"><div class="k">Días de caja</div><div class="v semaforo"><span class="dot ${sem[0]} ${sem[0]==='r'?'pulse':''}"></span>${sem[1]}</div><div class="note">al ritmo de gasto de 14 días</div></div>
-    <div class="card"><div class="k">Ingresos</div><div class="v green">${fmt0(ing)}</div></div>
-    <div class="card"><div class="k">Egresos</div><div class="v red">${fmt0(egr)}</div></div>
+    <div class="card"><div class="k">Ingresos</div><div class="v green">${fmt0(ing)}</div><div class="note">acumulado histórico</div></div>
+    <div class="card"><div class="k">Egresos</div><div class="v red">${fmt0(egr)}</div><div class="note">acumulado histórico</div></div>
     <div class="card"><div class="k">Comprometido</div><div class="v">${fmt0(comp)}</div><div class="note">${DB.pagos.filter(p=>p.estado!=="Pagado").length} pagos planificados</div></div>`;
 
   // Dudas
