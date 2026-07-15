@@ -127,6 +127,10 @@ tr:hover td{background:rgba(255,255,255,.03)}
 .ai-modo button.on{background:rgba(185,139,60,.22);color:var(--ink);border-color:transparent}
 /* ===== Quick wins UX (enjambre 15-jul): táctil, foco, safe-area, tablas móvil ===== */
 a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,[role=button]:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+/* Aviso no bloqueante (reemplaza alert()) */
+#fToast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom));transform:translateX(-50%) translateY(14px);background:#231d14;color:#F1EDE3;border:1px solid rgba(255,255,255,.14);border-left:3px solid var(--accent,#B98B3C);border-radius:11px;padding:12px 16px;font-size:13px;max-width:min(520px,92vw);box-shadow:0 18px 48px rgba(0,0,0,.5);opacity:0;pointer-events:none;transition:.24s;z-index:2147483000}
+#fToast.on{opacity:1;transform:translateX(-50%) translateY(0)}
+#fToast.bad{border-left-color:#c9584a}
 header{padding-top:calc(.9rem + env(safe-area-inset-top))}
 @media(max-width:700px){
   input,select,textarea{font-size:16px}
@@ -637,16 +641,18 @@ function openTransfer(destinoPre){
 }
 async function saveTransfer(){
   const origen=document.getElementById('trOrigen').value, destino=document.getElementById('trDestino').value;
-  const monto=+document.getElementById('trMonto').value, fecha=document.getElementById('trFecha').value, con=document.getElementById('trConcepto').value.trim(), quien=document.getElementById('trQuien').value.trim();
-  if(!monto||monto<=0){alert("Pon un monto válido");return}
-  if(origen===destino){alert("El origen y el destino deben ser bolsas distintas");return}
-  const ts=Date.now(), suf=(con?(" — "+con):"")+(quien?(" [presta: "+quien+"]"):"");
+  const monto=+document.getElementById('trMonto').value, fecha=document.getElementById('trFecha').value, con=document.getElementById('trConcepto').value.trim(), prestador=document.getElementById('trQuien').value.trim();
+  if(!monto||monto<=0){fToast("Pon un monto válido",1);return}
+  if(origen===destino){fToast("El origen y el destino deben ser bolsas distintas",1);return}
+  const ts=Date.now(), suf=(con?(" — "+con):"")+(prestador?(" [presta: "+prestador+"]"):"");
   const egr={id:"M-"+ts+"-o",tipo:"Egreso",fecha:fecha,monto:monto,beneficiario:"⇄ "+destino,proyecto:origen,notas:TRANSFER_TAG+" a "+destino+suf+" #T"+ts};
   const ing={id:"M-"+ts+"-d",tipo:"Ingreso",fecha:fecha,monto:monto,beneficiario:"⇄ "+origen,proyecto:destino,notas:TRANSFER_TAG+" de "+origen+suf+" #T"+ts};
+  // Confirmar ambas patas con el servidor antes de tocar la base local.
+  try{ await api("addMovimiento",{mov:egr,usuario:quien()}); await api("addMovimiento",{mov:ing,usuario:quien()}); }
+  catch(e){ fToast("No se guardó la transferencia ("+e.message+").",1); return; }
   DB.movimientos.push(egr,ing);
   DB.historial.unshift({ts:now(),usuario:quien(),accion:"Transferencia",detalle:`${fmt(monto)} ${origen} → ${destino}`});
-  try{ await api("addMovimiento",{mov:egr,usuario:quien()}); await api("addMovimiento",{mov:ing,usuario:quien()}); }catch(e){ alert(e.message); }
-  closeM('mTransfer'); renderAll();
+  closeM('mTransfer'); renderAll(); fToast("✓ Transferencia registrada");
 }
 function openUnify(){
   const proys=[...new Set([...DB.bolsas.map(b=>b.nombre),...DB.movimientos.map(m=>m.proyecto)])].filter(p=>p&&p!=="");
@@ -660,11 +666,11 @@ function openUnify(){
 }
 async function saveUnify(){
   const origen=document.getElementById('unOrigen').value, destino=document.getElementById('unDestino').value;
-  if(!origen||!destino){alert("Elige ambas bolsas");return}
-  if(origen===destino){alert("Deben ser bolsas distintas");return}
+  if(!origen||!destino){fToast("Elige ambas bolsas",1);return}
+  if(origen===destino){fToast("Deben ser bolsas distintas",1);return}
   if(!confirm("\u00bfFusionar \u00ab"+origen+"\u00bb en \u00ab"+destino+"\u00bb? Todos sus movimientos pasar\u00e1n a \u00ab"+destino+"\u00bb y la bolsa \u00ab"+origen+"\u00bb se eliminar\u00e1.")) return;
-  try{ const r=await api("mergeBolsa",{origen:origen,destino:destino,usuario:quien()}); closeM('mUnify'); await loadAll(); alert("Listo: "+(r.reasignados||0)+" movimientos reasignados a \u00ab"+destino+"\u00bb."); }
-  catch(e){ alert(e.message); }
+  try{ const r=await api("mergeBolsa",{origen:origen,destino:destino,usuario:quien()}); closeM('mUnify'); await loadAll(); fToast("\u2713 "+(r.reasignados||0)+" movimientos reasignados a \u00ab"+destino+"\u00bb."); }
+  catch(e){ fToast("No se pudo fusionar ("+e.message+").",1); }
 }
 function openPrestamos(){
   const movs=(DB.movimientos||[]); const pairs={};
@@ -827,35 +833,41 @@ function openMov(id){
   document.getElementById('mvNotas').value=m?m.notas||"":"";
   document.getElementById('mMov').classList.add('open');
 }
+// Aviso no bloqueante (reemplaza los alert() nativos que rompían la estética).
+function fToast(msg,bad){var t=document.getElementById('fToast');if(!t){t=document.createElement('div');t.id='fToast';document.body.appendChild(t);}t.textContent=msg;t.className='ftoast'+(bad?' bad':'')+' on';clearTimeout(t._t);t._t=setTimeout(function(){t.classList.remove('on');},4200);}
 async function saveMov(){
   const id=document.getElementById('mvId').value;
   const obj={tipo:mvTipo.value,fecha:mvFecha.value,monto:+mvMonto.value,beneficiario:mvBen.value,proyecto:mvProy.value,notas:mvNotas.value};
-  if(!obj.monto||!obj.beneficiario){alert("Falta monto o beneficiario");return}
-  if(id){ Object.assign(DB.movimientos.find(x=>x.id===id),obj);
-    DB.historial.unshift({ts:now(),usuario:quien(),accion:"Editó movimiento",detalle:`${obj.beneficiario} ${fmt(obj.monto)}`});
-    try{await api("updateMovimiento",{id,patch:obj,usuario:quien()})}catch(e){alert(e.message)} }
-  else{ obj.id="M-"+Date.now(); DB.movimientos.push(obj);
-    DB.historial.unshift({ts:now(),usuario:quien(),accion:"Alta movimiento",detalle:`${obj.tipo} ${fmt(obj.monto)} ${obj.beneficiario} → ${obj.proyecto}`});
-    try{await api("addMovimiento",{mov:obj,usuario:quien()})}catch(e){alert(e.message)} }
-  closeM('mMov'); renderAll();
+  if(!obj.monto||!obj.beneficiario){fToast("Falta el monto o el beneficiario",1);return}
+  // Confirmar con el servidor ANTES de tocar la base local: sin fantasmas si falla.
+  try{
+    if(id){ await api("updateMovimiento",{id,patch:obj,usuario:quien()});
+      Object.assign(DB.movimientos.find(x=>x.id===id),obj);
+      DB.historial.unshift({ts:now(),usuario:quien(),accion:"Editó movimiento",detalle:`${obj.beneficiario} ${fmt(obj.monto)}`});
+    }else{ obj.id="M-"+Date.now(); await api("addMovimiento",{mov:obj,usuario:quien()});
+      DB.movimientos.push(obj);
+      DB.historial.unshift({ts:now(),usuario:quien(),accion:"Alta movimiento",detalle:`${obj.tipo} ${fmt(obj.monto)} ${obj.beneficiario} → ${obj.proyecto}`});
+    }
+  }catch(e){ fToast("No se guardó ("+e.message+"). No quedó ningún registro — reintenta.",1); return; }
+  closeM('mMov'); renderAll(); fToast("✓ Movimiento guardado");
 }
 function openPago(){pgCon.value="";pgMonto.value="";pgFecha.value="";document.getElementById('mPago').classList.add('open')}
 async function savePago(){
   const obj={id:"P-"+Date.now(),concepto:pgCon.value,monto:+pgMonto.value,fechaLimite:pgFecha.value,tipoPago:pgTipo.value,prioridad:pgPrio.value,proyecto:pgProy.value,estado:"Pendiente"};
-  if(!obj.concepto||!obj.monto||!obj.fechaLimite){alert("Faltan datos");return}
+  if(!obj.concepto||!obj.monto||!obj.fechaLimite){fToast("Faltan datos",1);return}
+  try{await api("addPago",{pago:obj,usuario:quien()})}catch(e){fToast("No se guardó ("+e.message+"). Nada quedó registrado.",1);return}
   DB.pagos.push(obj);
   DB.historial.unshift({ts:now(),usuario:quien(),accion:"Pago planificado",detalle:`${obj.concepto} ${fmt(obj.monto)} (${obj.tipoPago})`});
-  try{await api("addPago",{pago:obj,usuario:quien()})}catch(e){alert(e.message)}
-  closeM('mPago'); renderAll();
+  closeM('mPago'); renderAll(); fToast("✓ Pago planificado");
 }
 function openIngreso(){igCon.value="";igMonto.value="";igFecha.value="";document.getElementById('mIng').classList.add('open')}
 async function saveIngreso(){
   const obj={id:"I-"+Date.now(),concepto:igCon.value,monto:+igMonto.value,fechaEsperada:igFecha.value,estatus:igEst.value,proyecto:igProy.value};
-  if(!obj.concepto||!obj.monto||!obj.fechaEsperada){alert("Faltan datos");return}
+  if(!obj.concepto||!obj.monto||!obj.fechaEsperada){fToast("Faltan datos",1);return}
+  try{await api("addIngreso",{ingreso:obj,usuario:quien()})}catch(e){fToast("No se guardó ("+e.message+"). Nada quedó registrado.",1);return}
   DB.ingresosEsperados.push(obj);
   DB.historial.unshift({ts:now(),usuario:quien(),accion:"Ingreso esperado",detalle:`${obj.concepto} ${fmt(obj.monto)}`});
-  try{await api("addIngreso",{ingreso:obj,usuario:quien()})}catch(e){alert(e.message)}
-  closeM('mIng'); renderAll();
+  closeM('mIng'); renderAll(); fToast("✓ Ingreso registrado");
 }
 const now=()=>new Date().toISOString().slice(0,16).replace("T"," ");
 
